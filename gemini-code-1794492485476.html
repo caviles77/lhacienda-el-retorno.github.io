@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacienda Ecoturística El Retorno | Paraíso Mágico</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts: Playfair Display (Títulos cursivos) y Montserrat (Cuerpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        brandBlue: '#1a8bc2',
+                        brandBlueDark: '#136d99',
+                        brandGreen: '#689f38',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados para fidelidad visual */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        .heading-italic {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        /* Línea punteada entre platos y precios en el menú */
+        .menu-leader {
+            display: flex;
+            align-items: baseline;
+        }
+        .menu-leader::after {
+            content: "";
+            flex-grow: 1;
+            border-bottom: 1px dotted #999;
+            margin: 0 10px;
+        }
+
+        /* Animación suave entre páginas */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.35s ease-in-out;
+        }
+        .page-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sombra de texto para Hero */
+        .hero-shadow {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
+        }
+    </style>
+</head>
+<body class="bg-white relative">
+
+    <!-- =====================================================================
+         MENÚ LATERAL DESPLEGABLE (OFF-CANVAS)
+    ====================================================================== -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-50 hidden transition-opacity"></div>
+    
+    <aside id="sidebarMenu" class="fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+        <div>
+            <div class="p-6 border-b flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs uppercase tracking-widest text-green-700 font-semibold block">Hacienda</span>
+                    <span class="heading-italic text-2xl font-bold text-brandBlue">El Retorno</span>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-800 text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <nav class="p-6 space-y-4">
+                <button onclick="navigateTo('home')" class="nav-link w-full text-left py-2.5 px-4 rounded-lg font-medium text-gray-700 hover:bg-sky-50 hover:text-brandBlue transition flex items-center gap-3">
+                    <i class="fa-solid fa-house w-5 text-brandBlue"></i> Inicio
+                </button>
+                <button onclick="navigateTo('menu')" class="nav-link w-full text-left py-2.5 px-4 rounded-lg font-medium text-gray-700 hover:bg-sky-50 hover:text-brandBlue transition flex items-center gap-3">
+                    <i class="fa-solid fa-utensils w-5 text-brandBlue"></i> Menú
+                </button>
+                <button onclick="navigateTo('contact')" class="nav-link w-full text-left py-2.5 px-4 rounded-lg font-medium text-gray-700 hover:bg-sky-50 hover:text-brandBlue transition flex items-center gap-3">
+                    <i class="fa-solid fa-calendar-check w-5 text-brandBlue"></i> Contáctanos y Reservas
+                </button>
+                <a href="https://maps.app.goo.gl/VYp6Rpdp5rS4JP6B9" target="_blank" rel="noopener noreferrer" class="w-full text-left py-2.5 px-4 rounded-lg font-medium text-gray-700 hover:bg-sky-50 hover:text-brandBlue transition flex items-center gap-3">
+                    <i class="fa-solid fa-location-dot w-5 text-brandBlue"></i> Cómo llegar (Maps)
+                </a>
+            </nav>
+        </div>
+        <div class="p-6 bg-gray-50 border-t text-xs text-gray-500 space-y-2">
+            <p class="font-semibold text-gray-700">Centro Poblado La Chamba</p>
+            <p><i class="fa-brands fa-whatsapp text-green-600 mr-1"></i> +57 320 411 2591</p>
+            <p><i class="fa-solid fa-phone text-brandBlue mr-1"></i> +57 323 253 9681</p>
+        </div>
+    </aside>
+
+    <!-- =====================================================================
+         BARRA DE NAVEGACIÓN SUPERIOR FLOTANTE (COMÚN EN TODAS LAS VISTAS)
+    ====================================================================== -->
+    <header class="absolute top-0 left-0 w-full z-30 px-6 md:px-16 py-6 flex items-center justify-between">
+        <!-- Botón Hamburguesa -->
+        <button onclick="toggleSidebar()" aria-label="Abrir menú" class="text-white hover:text-sky-200 transition text-2xl md:text-3xl p-2 drop-shadow-md focus:outline-none">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Botón Superior Derecho: Solicitar información -->
+        <button onclick="navigateTo('contact')" class="bg-brandBlue hover:bg-brandBlueDark text-white text-xs md:text-sm font-medium px-5 py-2.5 rounded shadow-md transition transform hover:scale-105">
+            Solicitar información
+        </button>
+    </header>
+
+    <!-- =====================================================================
+         BOTÓN FLOTANTE DE WHATSAPP (ESQUINA INFERIOR DERECHA)
+    ====================================================================== -->
+    <a href="https://wa.me/573204112591?text=Hola%20Hacienda%20El%20Retorno,%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." 
+       target="_blank" 
+       rel="noopener noreferrer"
+       aria-label="Contactar por WhatsApp"
+       class="fixed bottom-6 right-6 z-40 bg-[#25D366] hover:bg-[#1ebe5d] text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-3xl transition transform hover:scale-110">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+
+    <!-- =====================================================================
+         VISTA 1: PÁGINA PRINCIPAL (INICIO)
+    ====================================================================== -->
+    <main id="view-home" class="page-view active">
+        
+        <!-- HERO BANNER INICIO -->
+        <section class="relative h-[460px] md:h-[540px] w-full bg-cover bg-center flex flex-col items-center justify-center text-center px-4"
+                 style="background-image: linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.38)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
+            <h1 class="heading-italic text-white text-4xl sm:text-5xl md:text-6xl font-normal leading-tight hero-shadow max-w-2xl">
+                Descubre un<br>Paraíso mágico
+            </h1>
+            
+            <!-- Logo Central Blanco/Azul en Hero -->
+            <div class="mt-4 flex flex-col items-center hero-shadow">
+                <span class="text-[10px] tracking-[0.25em] uppercase text-white/90 font-semibold">Hacienda</span>
+                <span class="heading-italic text-3xl md:text-4xl text-sky-400 font-bold -mt-1">El Retorno</span>
+                <div class="w-24 h-1 bg-gradient-to-r from-green-400 via-sky-400 to-green-400 rounded-full mt-1"></div>
+            </div>
+        </section>
+
+        <!-- LOGOS DE CERTIFICACIÓN Y ALIANZAS -->
+        <section class="py-10 bg-white">
+            <div class="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8 md:gap-14">
+                <!-- Logo 1: Negocios Verdes -->
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-xl mb-1">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-green-700 leading-tight">NEGOCIOS<br>Verdes</span>
+                    <span class="text-[8px] text-gray-500 uppercase tracking-wider">CORTOLIMA</span>
+                </div>
+
+                <!-- Logo 2: Hacienda El Retorno -->
+                <div class="flex flex-col items-center text-center">
+                    <span class="text-[9px] uppercase tracking-widest text-green-700 font-semibold">Hacienda</span>
+                    <span class="heading-italic text-2xl md:text-3xl font-bold text-brandBlue leading-none">El Retorno</span>
+                    <div class="w-20 h-0.5 bg-green-600 mt-1"></div>
+                </div>
+
+                <!-- Logo 3: Magdalena Travesía Mágica -->
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex items-center gap-1">
+                        <i class="fa-solid fa-sun text-amber-500 text-sm"></i>
+                        <span class="heading-italic text-xl md:text-2xl font-bold text-green-700">Magdalena</span>
+                    </div>
+                    <span class="text-[9px] text-amber-600 font-semibold tracking-wider uppercase -mt-1">Travesía Mágica</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN BIENVENIDOS + MAPA DE UBICACIÓN -->
+        <section class="relative py-8 md:py-12 px-4 overflow-hidden">
+            <!-- Ilustración Botánica Izquierda -->
+            <svg class="hidden md:block absolute left-0 top-12 w-28 h-48 text-sky-400/50 pointer-events-none" viewBox="0 0 100 200" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M-10,100 Q40,60 70,20 M-10,110 Q45,90 80,60 M-10,120 Q40,120 75,110" />
+                <path d="M-10,130 Q35,150 65,175 M-10,140 Q25,170 45,195" stroke="#facc15" />
+            </svg>
+
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-6">
+                    Bienvenidos a<br>Hacienda El Retorno
+                </h2>
+
+                <div class="text-left text-xs md:text-sm text-gray-600 space-y-3 leading-relaxed max-w-2xl mx-auto">
+                    <p>
+                        En el corazón del Tolima, a orillas del majestuoso río Magdalena en el centro poblado de La Chamba, se encuentra Hacienda Ecoturística El Retorno: un espacio rodeado de naturaleza, tradición artesanal y tranquilidad rural.
+                    </p>
+                    <p>
+                        Aquí podrás desconectarte de la rutina, disfrutar de gastronomía típica de la región, descansar en nuestras cómodas cabañas y compartir momentos inolvidables en familia o con amigos.
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700 font-medium pt-1">
+                        <li>Medio ambiente y senderos ecológicos</li>
+                        <li>Cultura ancestral de la cerámica negra y roja de La Chamba</li>
+                        <li>Gastronomía típica rural</li>
+                    </ul>
+                </div>
+
+                <!-- Mapa de Google Maps Embed + Link directo -->
+                <div class="mt-8 max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 relative group">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15916.29947451531!2d-74.9189!3d4.0531!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3ed3f0b8b0b0b1%3A0x123456789abcdef!2sLa%20Chamba%2C%20Guamo%2C%20Tolima!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" 
+                        class="w-full h-48 md:h-56 border-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Mapa de ubicación Hacienda El Retorno">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/VYp6Rpdp5rS4JP6B9" target="_blank" rel="noopener noreferrer" 
+                       class="absolute top-3 left-3 bg-white/95 hover:bg-white text-brandBlue text-xs font-semibold px-3 py-1.5 rounded shadow flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-diamond-turn-right"></i> Abrir en Google Maps
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 1: HOSPEDAJE RURAL -->
+        <section class="relative py-12 px-4 max-w-5xl mx-auto">
+            <!-- Detalle botánico derecha -->
+            <svg class="hidden md:block absolute right-0 top-4 w-28 h-40 text-green-700/30 pointer-events-none" viewBox="0 0 100 150" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M90,10 C60,40 40,80 20,130 M60,45 C40,35 25,40 15,50 M45,75 C70,70 85,80 95,95 M35,100 C15,95 5,105 0,120" />
+            </svg>
+
+            <div class="max-w-2xl mx-auto md:ml-16">
+                <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-3">Hospedaje Rural</h2>
+                <p class="text-xs md:text-sm text-gray-600 mb-3">
+                    Disfruta de una estadía acogedora rodeada de naturaleza en nuestras cabañas campestres equipadas para el descanso.
+                </p>
+                <p class="text-xs font-semibold text-gray-700 mb-1">Incluye:</p>
+                <ul class="list-disc pl-5 text-xs md:text-sm text-gray-600 space-y-1 mb-4">
+                    <li>Alojamiento en cabaña rural con ventilación y baño privado</li>
+                    <li>Acceso a piscina, zonas verdes y juegos de mesa</li>
+                    <li>Desayuno típico campestre incluido</li>
+                    <li>Parqueadero privado</li>
+                </ul>
+                <p class="text-xs md:text-sm font-bold text-gray-800 mb-1">
+                    Valor por noche por pareja: <span class="text-brandBlue">$180.000 COP</span>
+                </p>
+                <p class="text-xs text-gray-500 mb-4">Nota: Niños menores de 4 años no pagan hospedaje.</p>
+                
+                <div class="text-center md:text-left">
+                    <button onclick="navigateTo('contact')" class="inline-block text-sm md:text-base font-serif italic font-semibold text-gray-800 border-b border-gray-800 hover:text-brandBlue hover:border-brandBlue transition pb-0.5">
+                        Solicitar más información
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collage Fotográfico Hospedaje (3 imágenes) -->
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center max-w-4xl mx-auto">
+                <div class="overflow-hidden rounded shadow-md h-64 sm:h-72">
+                    <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80" 
+                         alt="Habitación con camarotes" 
+                         class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="overflow-hidden rounded shadow-md h-64 sm:h-64 sm:mt-8">
+                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=600&q=80" 
+                         alt="Habitación doble" 
+                         class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="overflow-hidden rounded shadow-md h-64 sm:h-72 sm:-mt-6">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" 
+                         alt="Habitación principal" 
+                         class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: PASADÍA -->
+        <section class="relative py-12 px-4 max-w-5xl mx-auto">
+            <!-- Detalle botánico izquierda -->
+            <svg class="hidden md:block absolute left-0 top-10 w-28 h-40 text-brandBlue/30 pointer-events-none" viewBox="0 0 100 150" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="35" cy="75" r="22" />
+                <circle cx="35" cy="75" r="8" />
+                <path d="M35,53 L35,30 M57,75 L80,75 M35,97 L35,120 M13,75 L0,75" />
+            </svg>
+
+            <div class="max-w-xl mx-auto md:mr-16 md:ml-auto">
+                <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-3">Pasadía</h2>
+                <p class="text-xs md:text-sm text-gray-600 mb-3">
+                    Ven a pasar un día lleno de sol, piscina, buena comida y diversión campestre sin necesidad de hospedarte.
+                </p>
+                <p class="text-xs font-semibold text-gray-700 mb-1">Plan Pasadía incluye:</p>
+                <ul class="list-disc pl-5 text-xs md:text-sm text-gray-600 space-y-1 mb-3">
+                    <li>Ingreso a piscina y zonas húmedas</li>
+                    <li>Almuerzo típico a elección</li>
+                    <li>Uso de canchas, mesa de billar y juegos tradicionales</li>
+                </ul>
+                <p class="text-xs font-semibold text-gray-700 mb-1">Horarios y tarifas:</p>
+                <ul class="list-disc pl-5 text-xs md:text-sm text-gray-600 space-y-1 mb-3">
+                    <li>Horario: 9:00 a.m. a 5:00 p.m.</li>
+                    <li>Adultos: <strong class="text-gray-800">$45.000 COP</strong></li>
+                    <li>Niños (4 a 10 años): <strong class="text-gray-800">$30.000 COP</strong></li>
+                </ul>
+                <button onclick="navigateTo('contact')" class="text-xs font-bold text-brandBlue hover:underline">
+                    Reserva tu cupo ahora &rarr;
+                </button>
+            </div>
+
+            <!-- Collage Fotográfico Pasadía (3 imágenes con etiquetas) -->
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center max-w-4xl mx-auto">
+                <!-- Imagen 1: Piscina -->
+                <div class="relative overflow-hidden rounded shadow-md h-64 group">
+                    <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" 
+                         alt="Piscina de agua natural" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
+                        <span class="text-white text-xs font-medium">Piscina de agua natural</span>
+                    </div>
+                </div>
+                <!-- Imagen 2: Horno de leña -->
+                <div class="relative overflow-hidden rounded shadow-md h-64 sm:mt-8 group">
+                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" 
+                         alt="Horno de barro artesanal" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
+                        <span class="text-white text-xs font-medium">Horno de leña y barro</span>
+                    </div>
+                </div>
+                <!-- Imagen 3: Mesa de billar -->
+                <div class="relative overflow-hidden rounded shadow-md h-64 sm:mt-14 group">
+                    <img src="https://images.unsplash.com/photo-1588702547919-26089e690ecc?auto=format&fit=crop&w=600&q=80" 
+                         alt="Mesa de billar y juegos" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
+                        <span class="text-white text-xs font-medium">Zona de juegos y billar</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: ALIMENTACIÓN -->
+        <section class="relative py-12 px-4 max-w-5xl mx-auto">
+            <!-- Detalle botánico derecha -->
+            <svg class="hidden md:block absolute right-0 top-6 w-32 h-44 text-brandBlue/40 pointer-events-none" viewBox="0 0 100 150" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M85,140 C65,100 50,60 25,20 M65,105 L40,95 M55,80 L80,65 M45,55 L20,45 M35,35 L55,20" />
+            </svg>
+
+            <div class="max-w-2xl mx-auto md:ml-16">
+                <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-3">Alimentación</h2>
+                <p class="text-xs md:text-sm text-gray-600 mb-3">
+                    Sabores auténticos preparados en fogón de leña y servidos en la tradicional loza negra de La Chamba.
+                </p>
+                <ul class="list-disc pl-5 text-xs md:text-sm text-brandBlue font-medium space-y-1.5 mb-5">
+                    <li><button onclick="navigateTo('menu')" class="hover:underline">Desayunos típicos</button></li>
+                    <li><button onclick="navigateTo('menu')" class="hover:underline">Almuerzos tradicionales</button></li>
+                    <li><button onclick="navigateTo('menu')" class="hover:underline">Cenas campestres</button></li>
+                    <li><button onclick="navigateTo('menu')" class="hover:underline">Refrigerios y bebidas</button></li>
+                </ul>
+                <button onclick="navigateTo('menu')" class="bg-brandBlue hover:bg-brandBlueDark text-white text-xs font-medium px-5 py-2 rounded shadow transition">
+                    Ver carta completa
+                </button>
+            </div>
+        </section>
+
+        <!-- TEXTO LEGAL + NUESTRAS CERTIFICACIONES -->
+        <section class="py-12 px-4 max-w-4xl mx-auto text-center border-t border-gray-100">
+            <p class="text-[11px] text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Hacienda Ecoturística El Retorno SAS se encuentra comprometida con la sostenibilidad ambiental, social y económica, cumpliendo con la normatividad turística vigente en Colombia.
+            </p>
+
+            <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-8">Nuestras certificaciones</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <!-- Certificado 1 -->
+                <div class="border-2 border-green-100 bg-green-50/30 rounded-lg p-6 shadow-sm flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-sm text-green-800 uppercase tracking-wide">Aval Negocios Verdes</h3>
+                    <p class="text-xs text-gray-600 mt-1">Corporación Autónoma Regional del Tolima - CORTOLIMA</p>
+                    <span class="mt-3 text-[10px] bg-green-700 text-white px-2.5 py-0.5 rounded-full">Turismo Sostenible</span>
+                </div>
+
+                <!-- Certificado 2 -->
+                <div class="border-2 border-amber-100 bg-amber-50/30 rounded-lg p-6 shadow-sm flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-sm text-amber-900 uppercase tracking-wide">Registro Nacional de Turismo</h3>
+                    <p class="text-xs text-gray-600 mt-1">Ministerio de Comercio, Industria y Turismo de Colombia</p>
+                    <span class="mt-3 text-[10px] bg-amber-600 text-white px-2.5 py-0.5 rounded-full">Prestador Certificado</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- REPETICIÓN DE LOGOS ANTES DEL FOOTER (COMO EN CAPTURA) -->
+        <section class="py-8 bg-white">
+            <div class="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8 md:gap-14">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-lg mb-1">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-green-700 leading-tight">NEGOCIOS<br>Verdes</span>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="text-[9px] uppercase tracking-widest text-green-700 font-semibold">Hacienda</span>
+                    <span class="heading-italic text-2xl font-bold text-brandBlue leading-none">El Retorno</span>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="heading-italic text-xl font-bold text-green-700">Magdalena</span>
+                    <span class="text-[9px] text-amber-600 font-semibold uppercase -mt-1">Travesía Mágica</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================================
+         VISTA 2: PÁGINA DEL MENÚ
+    ====================================================================== -->
+    <main id="view-menu" class="page-view">
+
+        <!-- HERO BANNER MENÚ -->
+        <section class="relative h-[380px] md:h-[440px] w-full bg-cover bg-center flex flex-col items-center justify-center text-center px-4"
+                 style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1920&q=80');">
+            <h1 class="heading-italic text-white text-4xl sm:text-5xl md:text-6xl font-normal hero-shadow">
+                Menú
+            </h1>
+            <div class="mt-2 flex flex-col items-center hero-shadow">
+                <span class="text-[10px] tracking-[0.25em] uppercase text-white/90 font-semibold">Hacienda</span>
+                <span class="heading-italic text-3xl text-sky-400 font-bold -mt-1">El Retorno</span>
+            </div>
+        </section>
+
+        <!-- HORARIOS DE ATENCIÓN + FOTOS SUPERIORES -->
+        <section class="relative py-12 px-4 max-w-4xl mx-auto">
+            <!-- Ilustración Botánica Izquierda -->
+            <svg class="hidden md:block absolute -left-16 top-8 w-24 h-40 text-sky-400/50 pointer-events-none" viewBox="0 0 100 200" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M-10,100 Q40,60 70,20 M-10,110 Q45,90 80,60" />
+                <path d="M-10,130 Q35,150 65,175" stroke="#facc15" />
+            </svg>
+
+            <h2 class="heading-italic text-2xl md:text-3xl text-center text-gray-800 mb-8">
+                Conoce las opciones tenemos
+            </h2>
+
+            <!-- Tabla de horarios -->
+            <div class="max-w-md mx-auto text-xs text-gray-600 space-y-2 mb-12">
+                <div class="flex justify-between border-b border-gray-100 pb-1">
+                    <span class="font-semibold text-gray-800">Servicio</span>
+                    <span class="font-semibold text-gray-800">Horario</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Desayuno</span>
+                    <span>7:30 a.m. - 9:30 a.m.</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Almuerzo</span>
+                    <span>12:00 m. - 2:30 p.m.</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Cena</span>
+                    <span>6:30 p.m. - 8:30 p.m.</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Refrigerio y Bebidas</span>
+                    <span>Todo el día</span>
+                </div>
+            </div>
+
+            <!-- Dos fotos rectangulares asimétricas -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end max-w-3xl mx-auto">
+                <div class="sm:col-span-4 h-44 rounded overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=500&q=80" 
+                         alt="Preparación artesanal" 
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="sm:col-span-8 h-52 rounded overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80" 
+                         alt="Picada y platos típicos" 
+                         class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORÍA 1: DESAYUNO (Texto Izquierda, Platos Circulares Derecha) -->
+        <section class="py-10 px-4 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-4">
+                    <h3 class="heading-italic text-2xl text-gray-800">DESAYUNO</h3>
+                    <p class="text-[11px] text-gray-500">Todos nuestros desayunos incluyen bebida caliente (café, chocolate o aromática).</p>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>MAÑANA TOLIMENSE</span>
+                                <span>$15.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Tamal tolimense tradicional acompañado de arepa de maíz y bebida caliente.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>EL CRIOLLO</span>
+                                <span>$13.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Huevos al gusto (pericos, revueltos o fritos), arepa asada, queso campesino y bebida.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>EL PORTUGUES</span>
+                                <span>$15.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Calentado de frijol con arroz, huevo frito, chicharrón crocante y arepa.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>EL ALFONSO</span>
+                                <span>$18.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Carne asada a la plancha, huevos al gusto, arepa con queso y bebida.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>LA PORTUGUESA</span>
+                                <span>$15.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Omelette campesino relleno de jamón, queso y vegetales frescos con tostadas.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>LIGERO</span>
+                                <span>$12.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Porción de fruta fresca de temporada, yogurt natural y granola artesanal.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>EMPANADAS</span>
+                                <span>$10.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Porción de 4 empanadas típicas acompañadas de ají casero.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PORCIONES</span>
+                                <span>$5.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Adicional de huevos, arepa con queso o porción de fruta.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fotos Circulares Derecha -->
+                <div class="md:col-span-5 flex flex-col items-center relative py-4">
+                    <img src="https://images.unsplash.com/photo-1525351484163-7529414342d8?auto=format&fit=crop&w=400&q=80" 
+                         alt="Huevos pericos" 
+                         class="w-36 h-36 rounded-full object-cover shadow-lg border-4 border-white z-10">
+                    <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80" 
+                         alt="Tamal y acompañantes" 
+                         class="w-28 h-28 rounded-full object-cover shadow-lg border-4 border-white -mt-4 -ml-24 z-20">
+                    <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=500&q=80" 
+                         alt="Caldo tradicional" 
+                         class="w-48 h-48 rounded-full object-cover shadow-xl border-4 border-white -mt-6 ml-8 z-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORÍA 2: ALMUERZO (Platos Circulares Izquierda, Texto Derecha) -->
+        <section class="py-10 px-4 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <!-- Fotos Circulares Izquierda -->
+                <div class="md:col-span-5 order-2 md:order-1 flex flex-col items-center relative py-4">
+                    <img src="https://images.unsplash.com/photo-1604908177453-7462950a6a3b?auto=format&fit=crop&w=400&q=80" 
+                         alt="Sancocho de gallina" 
+                         class="w-40 h-40 rounded-full object-cover shadow-lg border-4 border-white z-10">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" 
+                         alt="Carne asada" 
+                         class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white -mt-4 -ml-24 z-20">
+                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=500&q=80" 
+                         alt="Mojarra frita típica" 
+                         class="w-52 h-52 rounded-full object-cover shadow-xl border-4 border-white -mt-6 ml-6 z-10">
+                </div>
+
+                <!-- Lista de Almuerzos Derecha -->
+                <div class="md:col-span-7 order-1 md:order-2 space-y-4">
+                    <h3 class="heading-italic text-2xl text-gray-800">ALMUERZO</h3>
+                    <p class="text-[11px] text-gray-500">Todos nuestros platos fuertes incluyen sopa del día, arroz, ensalada y bebida refrescante.</p>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>LA ORIGINAL</span>
+                                <span>$35.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Lechona tolimense tradicional servida con insulso y arepa blanca.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>SANCOCHO DE POLLO</span>
+                                <span>$25.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Sancocho campesino cocinado en leña con presa de pollo, yuca, plátano, mazorca, arroz y aguacate.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>SANCOCHO TRIFÁSICO</span>
+                                <span>$35.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Generoso sancocho con tres carnes (res, cerdo y pollo), acompañado de arroz blanco, banano y aguacate.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>CARNE DE RES A LA PARRILLA</span>
+                                <span>$27.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Corte seleccionado de res asado al carbón con papa salada, yuca y ensalada fresca.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PECHUGA A LA PLANCHA</span>
+                                <span>$27.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Filete de pechuga jugosa a la plancha con patacones y ensalada de la casa.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>LOMO A LA PLANCHA</span>
+                                <span>$27.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Lomo de cerdo tierno a la plancha acompañado de papas a la francesa y arroz.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PARRILLADA MIXTA</span>
+                                <span>$40.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Combinación de res, cerdo, pechuga, chorizo artesanal, arepa, papa salada y guacamole.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>VIUDO</span>
+                                <span>$35.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Tradicional viudo de capaz o bocachico del río Magdalena sudado con tubérculos y hogao.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PESCADO DE LA CASA</span>
+                                <span>$35.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Mojarra roja frita crocante acompañada de patacones, arroz con coco o blanco y ensalada.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>CHURRASCO</span>
+                                <span>$35.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Corte grueso de chatas a la parrilla con chimichurri artesanal y guarniciones.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORÍA 3: CENA (Texto Izquierda, Platos Circulares Derecha) -->
+        <section class="py-10 px-4 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-4">
+                    <h3 class="heading-italic text-2xl text-gray-800">CENA</h3>
+                    <p class="text-[11px] text-gray-500">Opciones ligeras y deliciosas para disfrutar en la noche campestre.</p>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PERRO CALIENTE</span>
+                                <span>$14.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Salchicha americana, queso fundido, tocineta, cebolla caramelizada y papas.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>HAMBURGUESA</span>
+                                <span>$18.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Carne artesanal 150g, queso doble crema, vegetales frescos y papas a la francesa.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>PATACÓN</span>
+                                <span>$16.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Patacón pisado crocante con carne desmechada, pollo, hogao y queso campesino.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>EL ALFONSO</span>
+                                <span>$18.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Porción de carne asada con arepa de maíz, queso y bebida caliente o fría.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>CALDO DE COSTILLA</span>
+                                <span>$14.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Sustancioso caldo de costilla de res con papa pastusa, cilantro y arepa.</p>
+                        </div>
+
+                        <div>
+                            <div class="menu-leader font-bold text-gray-800">
+                                <span>CALDO DE BAGRE</span>
+                                <span>$18.000</span>
+                            </div>
+                            <p class="text-[11px] text-gray-500">Caldo tradicional de bagre fresco del río con papa, yuca y acompañantes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fotos Circulares Derecha -->
+                <div class="md:col-span-5 flex flex-col items-center relative py-4">
+                    <img src="https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=400&q=80" 
+                         alt="Perro caliente y bebida" 
+                         class="w-40 h-40 rounded-full object-cover shadow-lg border-4 border-white z-10">
+                    <img src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=400&q=80" 
+                         alt="Patacón con carne" 
+                         class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white -mt-4 -ml-24 z-20">
+                    <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=500&q=80" 
+                         alt="Caldo de costilla" 
+                         class="w-44 h-44 rounded-full object-cover shadow-xl border-4 border-white -mt-6 ml-6 z-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORÍA 4: REFRIGERIO -->
+        <section class="py-10 px-4 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-4">
+                    <h3 class="heading-italic text-2xl text-gray-800">REFRIGERIO</h3>
+                    <p class="text-[11px] text-gray-500">Ideales para tus eventos empresariales, grupos o media tarde.</p>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="menu-leader font-bold text-gray-800">
+                            <span>Empanada con bebida</span>
+                            <span>$5.000</span>
+                        </div>
+                        <div class="menu-leader font-bold text-gray-800">
+                            <span>Pastel de pollo, carne o hawaiano</span>
+                            <span>$6.000</span>
+                        </div>
+                        <div class="menu-leader font-bold text-gray-800">
+                            <span>Tamal con arepa y bebida caliente</span>
+                            <span>$14.000</span>
+                        </div>
+                        <div class="menu-leader font-bold text-gray-800">
+                            <span>Sándwich de jamón y queso con jugo natural</span>
+                            <span>$10.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fotos Circulares Derecha -->
+                <div class="md:col-span-5 flex flex-col items-center relative py-4">
+                    <img src="https://images.unsplash.com/photo-1517244683847-7456b63c5969?auto=format&fit=crop&w=400&q=80" 
+                         alt="Avena y postre" 
+                         class="w-36 h-36 rounded-full object-cover shadow-lg border-4 border-white z-10">
+                    <img src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80" 
+                         alt="Empanadas típicas" 
+                         class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white -mt-4 -ml-24 z-20">
+                    <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=500&q=80" 
+                         alt="Refrigerio tradicional" 
+                         class="w-44 h-44 rounded-full object-cover shadow-xl border-4 border-white -mt-6 ml-6 z-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGOS ANTES DEL FOOTER -->
+        <section class="py-10 bg-white">
+            <div class="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8 md:gap-14">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-lg mb-1">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-green-700 leading-tight">NEGOCIOS<br>Verdes</span>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="text-[9px] uppercase tracking-widest text-green-700 font-semibold">Hacienda</span>
+                    <span class="heading-italic text-2xl font-bold text-brandBlue leading-none">El Retorno</span>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="heading-italic text-xl font-bold text-green-700">Magdalena</span>
+                    <span class="text-[9px] text-amber-600 font-semibold uppercase -mt-1">Travesía Mágica</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================================
+         VISTA 3: PÁGINA DE CONTÁCTANOS Y RESERVAS
+    ====================================================================== -->
+    <main id="view-contact" class="page-view">
+
+        <!-- HERO BANNER CONTÁCTANOS -->
+        <section class="relative h-[440px] md:h-[500px] w-full bg-cover bg-center flex flex-col items-center justify-center text-center px-4"
+                 style="background-image: linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.42)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
+            <h1 class="heading-italic text-white text-4xl sm:text-5xl md:text-6xl font-normal hero-shadow">
+                Contáctanos
+            </h1>
+            
+            <!-- Logo Central -->
+            <div class="mt-2 flex flex-col items-center hero-shadow">
+                <span class="text-[10px] tracking-[0.25em] uppercase text-white/90 font-semibold">Hacienda</span>
+                <span class="heading-italic text-3xl text-sky-400 font-bold -mt-1">El Retorno</span>
+            </div>
+
+            <!-- Información de contacto en dos columnas sobre la foto -->
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-12 text-left text-white text-xs max-w-xl mx-auto hero-shadow">
+                <div>
+                    <h3 class="font-bold text-sm mb-1">Dirección de la Hacienda el Retorno</h3>
+                    <p>Centro Poblado La Chamba</p>
+                    <p>Whatsapp: +57 320 411 2591</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm mb-1">Recepción</h3>
+                    <p>Teléfono: +57 323 253 9681</p>
+                    <p>Email: elretornohacienda@gmail.com</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DESCUBRE UN PARAÍSO MÁGICO -->
+        <section class="py-12 px-4 max-w-3xl mx-auto text-center">
+            <h2 class="heading-italic text-2xl md:text-3xl text-gray-800 mb-3">
+                Descubre un paraíso mágico
+            </h2>
+            <p class="text-xs text-gray-600 mb-3">
+                Hacienda típica rural que desarrolla “Turismo de naturaleza” con enfoque al:
+            </p>
+            <ul class="text-xs text-gray-600 space-y-1">
+                <li>-Medio ambiente</li>
+                <li>-Cultura ancestral</li>
+                <li>-Gastronomía típica rural</li>
+            </ul>
+        </section>
+
+        <!-- FORMULARIO DE RESERVA -->
+        <section class="py-8 px-4 max-w-3xl mx-auto">
+            <h2 class="heading-italic text-2xl md:text-3xl text-center text-gray-800 mb-8">
+                Reserva
+            </h2>
+
+            <form id="reservationForm" onsubmit="handleReservationSubmit(event)" class="space-y-6 text-xs text-gray-700">
+                <!-- Fila 1: Nombres, Email, Teléfono -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-500 mb-1">Nombres y Apellidos *</label>
+                        <input type="text" id="resName" required placeholder="Ej. Juan Pérez" 
+                               class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 mb-1">Email *</label>
+                        <input type="email" id="resEmail" required placeholder="correo@ejemplo.com" 
+                               class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 mb-1">Teléfono *</label>
+                        <input type="tel" id="resPhone" required placeholder="+57 300 000 0000" 
+                               class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Fila 2: Fecha de ingreso, Fecha de salida -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-500 mb-1">Fecha de ingreso *</label>
+                        <input type="date" id="resCheckIn" required 
+                               class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 mb-1">Fecha de salida *</label>
+                        <input type="date" id="resCheckOut" required 
+                               class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Fila 3: Adultos, Niños, Tipo de hospedaje -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-500 mb-1">Cantidad de adultos</label>
+                        <select id="resAdults" class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5+">5 o más</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 mb-1">Cantidad de niños</label>
+                        <select id="resChildren" class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4+">4 o más</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 mb-1">Tipo de hospedaje</label>
+                        <select id="resAccommodation" class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition">
+                            <option value="Cabaña Colibrí">Cabaña Colibrí</option>
+                            <option value="Cabaña Río Magdalena">Cabaña Río Magdalena</option>
+                            <option value="Cabaña Familiar">Cabaña Familiar</option>
+                            <option value="Plan Pasadía">Plan Pasadía (Sin hospedaje)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fila 4: Mensaje adicional -->
+                <div>
+                    <label class="block text-gray-500 mb-1">Mensaje Adicional</label>
+                    <textarea id="resMessage" rows="3" placeholder="Mensaje Adicional" 
+                              class="w-full border-b border-gray-300 focus:border-brandBlue py-2 outline-none bg-transparent transition resize-none"></textarea>
+                </div>
+
+                <!-- Botón Enviar alineado a la derecha como en la captura -->
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="bg-brandBlue hover:bg-brandBlueDark text-white font-medium text-xs px-8 py-2.5 rounded shadow transition transform hover:scale-105">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+
+            <!-- Mensaje de Confirmación tras enviar formulario -->
+            <div id="reservationSuccess" class="hidden mt-6 p-5 bg-green-50 border border-green-200 rounded-lg text-center space-y-3">
+                <div class="text-green-600 text-2xl"><i class="fa-solid fa-circle-check"></i></div>
+                <h4 class="font-bold text-green-800 text-sm">¡Solicitud de reserva recibida!</h4>
+                <p id="reservationSummary" class="text-xs text-gray-700"></p>
+                <div class="pt-2">
+                    <a id="whatsappDirectLink" href="#" target="_blank" rel="noopener noreferrer" 
+                       class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-semibold px-4 py-2 rounded shadow transition">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Confirmar directamente por WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGOS ANTES DEL FOOTER -->
+        <section class="py-12 bg-white">
+            <div class="max-w-4xl mx-auto px-4 flex flex-wrap items-center justify-center gap-8 md:gap-14">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-xl mb-1">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-green-700 leading-tight">NEGOCIOS<br>Verdes</span>
+                    <span class="text-[8px] text-gray-500 uppercase tracking-wider">CORTOLIMA</span>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="text-[9px] uppercase tracking-widest text-green-700 font-semibold">Hacienda</span>
+                    <span class="heading-italic text-2xl md:text-3xl font-bold text-brandBlue leading-none">El Retorno</span>
+                    <div class="w-20 h-0.5 bg-green-600 mt-1"></div>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex items-center gap-1">
+                        <i class="fa-solid fa-sun text-amber-500 text-sm"></i>
+                        <span class="heading-italic text-xl md:text-2xl font-bold text-green-700">Magdalena</span>
+                    </div>
+                    <span class="text-[9px] text-amber-600 font-semibold tracking-wider uppercase -mt-1">Travesía Mágica</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================================
+         FOOTER GLOBAL (COMÚN EN LAS 3 VISTAS)
+    ====================================================================== -->
+    <footer class="relative bg-cover bg-center text-white pt-12 pb-6 px-4"
+            style="background-image: linear-gradient(rgba(15, 28, 18, 0.82), rgba(10, 20, 12, 0.90)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80');">
+        
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            
+            <!-- Columna 1: Logo + Datos de contacto + Redes sociales -->
+            <div class="md:col-span-5 space-y-3 text-xs">
+                <div class="inline-block mb-1">
+                    <span class="text-[9px] uppercase tracking-widest text-green-400 font-semibold block">Hacienda</span>
+                    <span class="heading-italic text-3xl font-bold text-sky-400 leading-none">El Retorno</span>
+                </div>
+                <p class="text-gray-200">Ubicación: Centro Poblado La Chamba</p>
+                <p class="text-gray-200">Teléfono: +57 323 253 9681</p>
+                <p class="text-gray-200">Whatsapp: +57 320 411 2591</p>
+                <p class="text-gray-200">Email: elretornohacienda@gmail.com</p>
+
+                <!-- Íconos Redes Sociales -->
+                <div class="flex items-center gap-4 pt-2 text-base">
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-sky-400 transition">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-sky-400 transition">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Enlaces de navegación -->
+            <div class="md:col-span-3 space-y-2 text-xs">
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="navigateTo('home')" class="hover:text-sky-400 transition">Inicio</button>
+                    </li>
+                    <li>
+                        <button onclick="navigateTo('menu')" class="hover:text-sky-400 transition">Menú</button>
+                    </li>
+                    <li>
+                        <button onclick="navigateTo('contact')" class="hover:text-sky-400 transition">Contáctanos y Reservas</button>
+                    </li>
+                    <li>
+                        <a href="https://maps.app.goo.gl/VYp6Rpdp5rS4JP6B9" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition">
+                            Galería e Ubicación
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Tarjeta de Mapa Google Maps -->
+            <div class="md:col-span-4">
+                <div class="bg-white rounded overflow-hidden shadow-lg text-gray-800 relative">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15916.29947451531!2d-74.9189!3d4.0531!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3ed3f0b8b0b0b1%3A0x123456789abcdef!2sLa%20Chamba%2C%20Guamo%2C%20Tolima!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" 
+                        class="w-full h-36 border-0" 
+                        loading="lazy" 
+                        title="Mapa Footer Hacienda El Retorno">
+                    </iframe>
+                    <div class="p-2 bg-white flex items-center justify-between text-[10px]">
+                        <div>
+                            <p class="font-bold text-gray-900">Hacienda Ecoturística El Retorno</p>
+                            <p class="text-gray-500">La Chamba, Guamo, Tolima</p>
+                        </div>
+                        <a href="https://maps.app.goo.gl/VYp6Rpdp5rS4JP6B9" target="_blank" rel="noopener noreferrer" 
+                           class="bg-brandBlue hover:bg-brandBlueDark text-white px-2.5 py-1 rounded font-semibold transition">
+                            Abrir mapa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-10 pt-4 border-t border-white/15 text-center text-[10px] text-gray-300">
+            Copyright © 2024 Hacienda Ecoturística El Retorno SAS. Todos los derechos reservados.
+        </div>
+    </footer>
+
+
+    <!-- =====================================================================
+         JAVASCRIPT PARA INTERACTIVIDAD Y NAVEGACIÓN
+    ====================================================================== -->
+    <script>
+        // Abrir / cerrar menú lateral
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Navegar entre las 3 vistas (Inicio, Menú, Contáctanos)
+        function navigateTo(pageId) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            // Mostrar la vista seleccionada
+            const target = document.getElementById('view-' + pageId);
+            if (target) {
+                target.classList.add('active');
+            }
+
+            // Cerrar menú lateral si está abierto
+            const sidebar = document.getElementById('sidebarMenu');
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
+            // Subir suavemente al inicio de la página
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Manejo interactivo del formulario de reserva
+        function handleReservationSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('resName').value;
+            const checkIn = document.getElementById('resCheckIn').value;
+            const checkOut = document.getElementById('resCheckOut').value;
+            const adults = document.getElementById('resAdults').value;
+            const children = document.getElementById('resChildren').value;
+            const accommodation = document.getElementById('resAccommodation').value;
+            const message = document.getElementById('resMessage').value;
+
+            // Mostrar resumen en pantalla
+            const summaryBox = document.getElementById('reservationSuccess');
+            const summaryText = document.getElementById('reservationSummary');
+            summaryText.innerHTML = `Gracias <strong>${name}</strong>. Hemos registrado tu solicitud para <strong>${accommodation}</strong> (${adults} adultos, ${children} niños) del <strong>${checkIn}</strong> al <strong>${checkOut}</strong>.`;
+            
+            // Preparar enlace directo a WhatsApp con los datos del formulario
+            const waText = encodeURIComponent(
+                `Hola Hacienda El Retorno, quiero realizar una reserva:\n` +
+                `• Nombre: ${name}\n` +
+                `• Plan/Cabaña: ${accommodation}\n` +
+                `• Ingreso: ${checkIn}\n` +
+                `• Salida: ${checkOut}\n` +
+                `• Personas: ${adults} adultos, ${children} niños\n` +
+                (message ? `• Nota: ${message}` : '')
+            );
+            document.getElementById('whatsappDirectLink').href = `https://wa.me/573204112591?text=${waText}`;
+
+            summaryBox.classList.remove('hidden');
+            summaryBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Configurar fecha mínima en los inputs de reserva al día de hoy
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const checkInInput = document.getElementById('resCheckIn');
+            const checkOutInput = document.getElementById('resCheckOut');
+            if (checkInInput && checkOutInput) {
+                checkInInput.min = today;
+                checkOutInput.min = today;
+                checkInInput.addEventListener('change', () => {
+                    checkOutInput.min = checkInInput.value;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
